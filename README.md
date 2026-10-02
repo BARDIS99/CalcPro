@@ -8,7 +8,6 @@ Modern dark calculator with gold accents and calculation history.
 - Percentage, sign toggle, clear
 - Live expression display
 - Calculation history (saved in localStorage)
-- Tap history item to reuse result
 - Responsive: side panel on desktop, slide-in on mobile
 
 ## How to run
@@ -16,8 +15,7 @@ Open `index.html` in any modern browser.
 
 ## Files
 - `index.html` – structure
-- `css/style.css` – styles
-- `js/script.js` – logic
+- `style.css` – styles
+- `script.js` – logic
 
-## Author
-Built for presentation.
+
