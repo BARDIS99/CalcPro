@@ -160,7 +160,7 @@ header {
   font-weight: bold;
 }
 
-.mem-btn, .save-btn {
+.mem-btn {
   background: rgba(124, 58, 237, 0.08);
   border: none;
   color: var(--accent2);
@@ -169,11 +169,6 @@ header {
   padding: 7px 9px;
   border-radius: 10px;
   cursor: pointer;
-}
-
-.save-btn {
-  background: var(--accent);
-  color: white;
 }
 
 /* Keypad */
@@ -214,10 +209,6 @@ header {
 
 .btn.equal {
   box-shadow: 0 0 20px rgba(139, 92, 246, 0.35);
-}
-
-.btn.zero {
-  grid-column: span 2;
 }
 
 /* Navigation */

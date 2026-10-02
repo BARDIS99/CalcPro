@@ -1,4 +1,3 @@
-// Get elements from the page 
 const expressionEl = document.getElementById('expression');
 const resultEl = document.getElementById('result');
 const memoryValueEl = document.getElementById('memoryValue');
@@ -6,7 +5,6 @@ const themeButton = document.getElementById('themeButton');
 const sidePanel = document.getElementById('sidePanel');
 const panelList = document.getElementById('panelList');
 
-// Variable to keep track of calculator state
 let expression = '';
 let current = '0';
 let lastAction = null;
@@ -14,38 +12,43 @@ let memory = 0;
 let historyList = [];
 let isLightMode = false;
 
-// Theme button click
 themeButton.onclick = function() {
   isLightMode = !isLightMode;
   document.body.classList.toggle('light', isLightMode);
   themeButton.textContent = isLightMode ? '☾' : '☀';
+  try {
+    localStorage.setItem('calcTheme', isLightMode ? 'light' : 'dark');
+  } catch (e) {}
 };
 
-// Format number for display
+function loadTheme() {
+  try {
+    const saved = localStorage.getItem('calcTheme');
+    if (saved === 'light') {
+      isLightMode = true;
+      document.body.classList.add('light');
+      themeButton.textContent = '☾';
+    }
+  } catch (e) {}
+}
+
 function formatNumber(num) {
-  if (num === 'Error' || num === 'Cannot divide by zero') {
-    return num;
-  }
+  if (num === 'Error' || num === 'Cannot divide by zero') return num;
   const value = Number(num);
-  if (isNaN(value)) {
-    return num;
-  }
+  if (isNaN(value)) return num;
   return value.toLocaleString('en', { maximumFractionDigits: 10 });
 }
 
-// Get the real number value (remove commas)
 function getValue() {
   return Number(String(current).replace(/,/g, '')) || 0;
 }
 
-// Update the screen
 function updateDisplay() {
   expressionEl.textContent = expression;
   resultEl.textContent = formatNumber(current);
   memoryValueEl.textContent = memory;
 }
 
-// When user presses a number
 function addNumber(value) {
   if (current === 'Error' || current === 'Cannot divide by zero') {
     clearAll();
@@ -65,7 +68,6 @@ function addNumber(value) {
   updateDisplay();
 }
 
-// When user presses an operator
 function addOperator(op) {
   if (current === 'Error') return;
 
@@ -79,25 +81,22 @@ function addOperator(op) {
   updateDisplay();
 }
 
-// When user presses equals
 function calculate() {
   if (!expression) return;
 
   try {
-    let fullExpression = (expression + current)
+    let fullExpr = (expression + current)
       .replace(/×/g, '*')
       .replace(/÷/g, '/')
-      .replace(/-/g, '-')
       .replace(/,/g, '');
 
-    // Check for division by zero
-    if (/\/\s*0(?!\.\d)/.test(fullExpression)) {
+    if (/\/\s*0(?!\.\d)/.test(fullExpr)) {
       current = 'Cannot divide by zero';
       updateDisplay();
       return;
     }
 
-    const answer = Function('return (' + fullExpression + ')')();
+    const answer = Function('return (' + fullExpr + ')')();
 
     if (!isFinite(answer)) {
       current = 'Error';
@@ -105,28 +104,24 @@ function calculate() {
       return;
     }
 
-    const resultString = String(answer);
+    const result = String(answer);
     
-    // Save to history
     historyList.unshift({
       expr: (expression + current).trim(),
-      result: resultString
+      result: result
     });
-    if (historyList.length > 50) {
-      historyList.pop();
-    }
+    if (historyList.length > 50) historyList.pop();
 
     expression = '';
-    current = resultString;
+    current = result;
     lastAction = 'equals';
     updateDisplay();
-  } catch (error) {
+  } catch (e) {
     current = 'Error';
     updateDisplay();
   }
 }
 
-// Clear everything
 function clearAll() {
   expression = '';
   current = '0';
@@ -134,7 +129,6 @@ function clearAll() {
   updateDisplay();
 }
 
-// Change sign (+/-)
 function toggleSign() {
   if (current !== '0' && current !== 'Error') {
     current = String(-getValue());
@@ -142,23 +136,35 @@ function toggleSign() {
   }
 }
 
-// Percentage
 function percentage() {
   current = String(getValue() / 100);
   updateDisplay();
 }
 
-// Number and operator buttons
-document.querySelectorAll('.btn').forEach(function(button) {
-  button.onclick = function() {
-    const value = button.getAttribute('data-value');
-    const action = button.getAttribute('data-action');
+function deleteChar() {
+  if (current === 'Error' || current === 'Cannot divide by zero') {
+    clearAll();
+    return;
+  }
+  
+  if (current.length === 1 || current === '0') {
+    current = '0';
+  } else {
+    current = current.slice(0, -1);
+  }
+  updateDisplay();
+}
 
-    if (value) {
-      if (value === '+' || value === '-' || value === '×' || value === '÷') {
-        addOperator(value);
+document.querySelectorAll('.btn').forEach(function(btn) {
+  btn.onclick = function() {
+    const val = btn.getAttribute('data-value');
+    const action = btn.getAttribute('data-action');
+
+    if (val) {
+      if (val === '+' || val === '-' || val === '×' || val === '÷') {
+        addOperator(val);
       } else {
-        addNumber(value);
+        addNumber(val);
       }
     } else if (action === 'clear') {
       clearAll();
@@ -166,24 +172,23 @@ document.querySelectorAll('.btn').forEach(function(button) {
       toggleSign();
     } else if (action === 'percent') {
       percentage();
+    } else if (action === 'delete') {
+      deleteChar();
     } else if (action === 'equals') {
       calculate();
     }
   };
 });
 
-// Memory buttons
-document.querySelectorAll('.mem-btn').forEach(function(button) {
-  button.onclick = function() {
-    const action = button.getAttribute('data-action');
-
+document.querySelectorAll('.mem-btn').forEach(function(btn) {
+  btn.onclick = function() {
+    const action = btn.getAttribute('data-action');
     if (action === 'M+') {
-      memory = memory + getValue();
+      memory += getValue();
     } else if (action === 'M-') {
-      memory = memory - getValue();
+      memory -= getValue();
     } else if (action === 'MR') {
       current = String(memory);
-      updateDisplay();
     } else if (action === 'MC') {
       memory = 0;
     }
@@ -191,7 +196,6 @@ document.querySelectorAll('.mem-btn').forEach(function(button) {
   };
 });
 
-// Render history panel
 function renderHistory() {
   document.getElementById('panelTitle').textContent = 'History';
   
@@ -211,8 +215,8 @@ function renderHistory() {
 
   document.querySelectorAll('.history-item').forEach(function(item) {
     item.onclick = function() {
-      const index = item.getAttribute('data-index');
-      current = historyList[index].result;
+      const idx = item.getAttribute('data-index');
+      current = historyList[idx].result;
       expression = '';
       lastAction = 'equals';
       updateDisplay();
@@ -221,34 +225,21 @@ function renderHistory() {
   });
 }
 
-// Open history panel
 function openHistory() {
   renderHistory();
   sidePanel.classList.add('open');
 }
 
-// History button clicks
 document.getElementById('historyNav').onclick = openHistory;
 document.getElementById('historyButton').onclick = openHistory;
 document.getElementById('closePanel').onclick = function() {
   sidePanel.classList.remove('open');
 };
 
-// Disable Notes button (feature removed)
-document.getElementById('notesNav').onclick = function() {
-  alert('Notes feature has been removed');
-};
-
-// Disable Save Note button (feature removed)
-document.getElementById('saveNoteBtn').onclick = function() {
-  alert('Notes feature has been removed');
-};
-
-// Clear history button
 document.getElementById('clearBtn').onclick = function() {
   historyList = [];
   renderHistory();
 };
 
-// Start the calculator
+loadTheme();
 updateDisplay();
