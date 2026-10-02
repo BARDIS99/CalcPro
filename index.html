@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Calcu</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <div class="app">
+
+    <!-- Header -->
+    <header>
+      <button class="icon-btn" id="themeButton">☀</button>
+
+      <div class="brand">
+        <div class="logo">▣</div>
+        <div>
+          <h1>Calcu</h1>
+          <small>Calculate · Explore · Achieve</small>
+        </div>
+      </div>
+
+      <button class="icon-btn" id="historyButton">🕑</button>
+    </header>
+
+    <!-- Display -->
+    <div class="display">
+      <div class="expression" id="expression"></div>
+      <div class="result" id="result">0</div>
+    </div>
+
+    <!-- Memory Bar -->
+    <div class="memory-bar">
+      <div class="memory-info" id="memoryBox">
+        <span>M</span>
+        <b id="memoryName">Memory</b>:
+        <b id="memoryValue">0</b>
+      </div>
+      <button class="mem-btn" data-action="MC">MC</button>
+      <button class="mem-btn" data-action="MR">MR</button>
+      <button class="mem-btn" data-action="M+">M+</button>
+      <button class="mem-btn" data-action="M-">M-</button>
+      <button class="save-btn" id="saveNoteBtn">💾</button>
+    </div>
+
+    <!-- Keypad -->
+    <div class="keypad">
+      <button class="btn function" data-action="clear">AC</button>
+      <button class="btn function" data-action="sign">+/-</button>
+      <button class="btn function" data-action="percent">%</button>
+      <button class="btn operator" data-value="÷">÷</button>
+
+      <button class="btn" data-value="7">7</button>
+      <button class="btn" data-value="8">8</button>
+      <button class="btn" data-value="9">9</button>
+      <button class="btn operator" data-value="×">×</button>
+
+      <button class="btn" data-value="4">4</button>
+      <button class="btn" data-value="5">5</button>
+      <button class="btn" data-value="6">6</button>
+      <button class="btn operator" data-value="-">-</button>
+
+      <button class="btn" data-value="1">1</button>
+      <button class="btn" data-value="2">2</button>
+      <button class="btn" data-value="3">3</button>
+      <button class="btn operator" data-value="+">+</button>
+
+      <button class="btn zero" data-value="0">0</button>
+      <button class="btn" data-value=".">.</button>
+      <button class="btn equal" data-action="equals">=</button>
+    </div>
+
+    <!-- Bottom Navigation -->
+    <nav>
+      <button class="nav-btn active"><span>▣</span>Calculator</button>
+      <button class="nav-btn" id="historyNav"><span>🕑</span>History</button>
+      <button class="nav-btn" id="notesNav"><span>📝</span>Notes</button>
+    </nav>
+
+  </div>
+
+  <!-- Side Panel for History and Notes -->
+  <div class="panel" id="sidePanel">
+    <div class="panel-header">
+      <h2 id="panelTitle">History</h2>
+      <button id="closePanel">✕</button>
+    </div>
+    <div class="panel-list" id="panelList"></div>
+    <button class="clear-btn" id="clearBtn">Clear</button>
+  </div>
+
+  <script src="js/script.js"></script>
+</body>
+</html>
