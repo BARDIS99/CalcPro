@@ -1,18 +1,18 @@
-// Get elemens  from the page 
-const expressionEI = document.getElementById('experession');
-const resultEI = document.getElementById('result');
-const memoryValueEI = document.getElementById('memoryValueEI');
+// Get elements from the page 
+const expressionEl = document.getElementById('expression');
+const resultEl = document.getElementById('result');
+const memoryValueEl = document.getElementById('memoryValue');
 const themeButton = document.getElementById('themeButton');
 const sidePanel = document.getElementById('sidePanel');
-const penelList = document.getElementById('penelList');
+const panelList = document.getElementById('panelList');
 
 // Variable to keep track of calculator state
 let expression = '';
 let current = '0';
-let lastAction = null
+let lastAction = null;
 let memory = 0;
-let isLastAction = false
 let historyList = [];
+let isLightMode = false;
 
 // Theme button click
 themeButton.onclick = function() {
