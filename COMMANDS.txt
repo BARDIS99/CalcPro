@@ -1,0 +1,136 @@
+═══════════════════════════════════════════════════════════════════
+                    CalcPro - Command Reference
+═══════════════════════════════════════════════════════════════════
+
+📍 Navigate to project:
+───────────────────────────────────────────────────────────────────
+cd /home/speaker/Downloads/calcpro
+
+🔐 Authenticate with GitHub (one-time):
+───────────────────────────────────────────────────────────────────
+gh auth login
+
+    Follow prompts:
+    → Choose: GitHub.com
+    → Protocol: HTTPS  
+    → Authenticate: Login with a web browser
+    → Copy code, press Enter, paste in browser
+
+🚀 Create repository and push (all-in-one):
+───────────────────────────────────────────────────────────────────
+gh repo create calcpro --public --source=. --remote=origin --push
+
+    This creates the repo AND pushes all code!
+
+🌐 View repository online:
+───────────────────────────────────────────────────────────────────
+gh repo view --web
+
+📊 Check status:
+───────────────────────────────────────────────────────────────────
+git status
+git log --oneline
+
+💻 Run locally:
+───────────────────────────────────────────────────────────────────
+npm run dev
+# Opens at http://localhost:3000
+
+═══════════════════════════════════════════════════════════════════
+                Alternative: Manual GitHub Method
+═══════════════════════════════════════════════════════════════════
+
+1️⃣ Create repository on GitHub:
+   → Go to: https://github.com/new
+   → Name: calcpro
+   → Public repository
+   → DO NOT initialize with README
+   → Click "Create repository"
+
+2️⃣ Push code (replace YOUR_USERNAME):
+   git remote add origin https://github.com/YOUR_USERNAME/calcpro.git
+   git push -u origin main
+
+═══════════════════════════════════════════════════════════════════
+                        Quick Deploy
+═══════════════════════════════════════════════════════════════════
+
+🟣 Vercel (Free):
+───────────────────────────────────────────────────────────────────
+npm i -g vercel
+vercel
+
+🟢 Netlify (Free):
+───────────────────────────────────────────────────────────────────
+npm i -g netlify-cli
+netlify deploy --prod
+
+📄 GitHub Pages (Free):
+───────────────────────────────────────────────────────────────────
+After pushing to GitHub:
+→ Settings → Pages → Source: main → Save
+→ Live at: https://YOUR_USERNAME.github.io/calcpro
+
+═══════════════════════════════════════════════════════════════════
+                    Update Code Later
+═══════════════════════════════════════════════════════════════════
+
+# Make your changes, then:
+git add -A
+git commit -m "Update: your message here"
+git push origin main
+
+═══════════════════════════════════════════════════════════════════
+                    Helpful Git Commands
+═══════════════════════════════════════════════════════════════════
+
+git status              # Check what changed
+git log --oneline       # View commit history
+git diff                # See changes
+git remote -v           # View remote URLs
+git branch             # List branches
+
+═══════════════════════════════════════════════════════════════════
+                    Files in Your Project
+═══════════════════════════════════════════════════════════════════
+
+Source Code:
+  • index.html - Main app
+  • js/script.js - All functionality
+  • css/style.css - All styles
+  • manifest.json - PWA config
+  • sw.js - Service worker
+
+Documentation:
+  • README.md - Main docs
+  • FEATURES.md - Feature details
+  • QUICKSTART.md - Quick guide
+  • TOKEN_ECONOMY.md - Token system
+  • PUSH_TO_GITHUB.md - GitHub guide
+  • DEPLOY.md - Deploy options
+  • COMMANDS.txt - This file
+
+Scripts:
+  • QUICK_PUSH.sh - Auto push script
+  • server.js - Dev server
+
+Total: 28 files, 6000+ lines
+
+═══════════════════════════════════════════════════════════════════
+                    Your App Features
+═══════════════════════════════════════════════════════════════════
+
+✓ Advanced calculator (√, x², x^y, n!, mod)
+✓ Token rewards (10 per ad)
+✓ Premium moods (8 unlockable)
+✓ Memory management
+✓ Calculation history (copy/share)
+✓ Currency converter (8 currencies)
+✓ Dark/Light themes
+✓ PWA (installable, offline)
+
+═══════════════════════════════════════════════════════════════════
+
+🎯 Ready to push? Start with: gh auth login
+
+═══════════════════════════════════════════════════════════════════
