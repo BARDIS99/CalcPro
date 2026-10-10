@@ -1,0 +1,14 @@
+{
+  "name": "calcpro",
+  "version": "1.0.0",
+  "description": "Modern dark calculator with gold accents and calculation history.",
+  "type": "module",
+  "scripts": {
+    "dev": "node server.js",
+    "start": "node server.js",
+    "build": "node -e \"process.exit(0)\""
+  },
+  "dependencies": {
+    "express": "^4.21.2"
+  }
+}
