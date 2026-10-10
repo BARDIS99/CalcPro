@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CalcPro</title>
+  <meta name="description" content="Modern dark calculator with memory and calculation history.">
+  <meta property="og:title" content="CalcPro">
+  <meta property="og:description" content="Modern dark calculator with memory and calculation history.">
+  
+  <!-- PWA & Mobile Capabilities -->
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#7c3aed">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="CalcPro">
+  <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
+  <link rel="icon" type="image/svg+xml" href="/icons/icon.svg">
+  <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
+
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <div class="app">
+
+    <!-- Header -->
+    <header>
+      <button class="icon-btn" id="themeButton" title="Toggle theme">☀</button>
+
+      <div class="brand">
+        <div class="logo">▣</div>
+        <div>
+          <h1>Calcu</h1>
+        </div>
+      </div>
+
+      <button class="icon-btn tokens-btn" id="tokensButton" title="Your Tokens">
+        <span class="token-emoji">🪙</span>
+        <span class="token-count" id="tokenCount">0</span>
+      </button>
+      <button class="icon-btn install-btn" id="installButton" title="Download & Install App">📲</button>
+      <button class="icon-btn" id="historyButton" title="History">🕑</button>
+    </header>
+
+    <!-- Display -->
+    <div class="display">
+      <div class="expression" id="expression"></div>
+      <div class="result" id="result">0</div>
+    </div>
+
+    <!-- Memory Bar -->
+    <div class="memory-bar">
+      <div class="memory-info" id="memoryBox" title="Click to view saved memories">
+        <span>M</span>
+        <b id="memoryName">Memory</b>:
+        <b id="memoryValue">0</b>
+        <span class="saved-mode-pill" id="savedModePill">SAVED</span>
+      </div>
+      <button class="mem-btn" data-action="MC" title="Memory Clear">MC</button>
+      <button class="mem-btn" data-action="MR" title="Memory Recall">MR</button>
+      <button class="mem-btn" data-action="M+" title="Memory Add">M+</button>
+      <button class="mem-btn" data-action="M-" title="Memory Subtract">M-</button>
+      <button class="mem-btn save-btn" data-action="MS" title="Memory Save">MS</button>
+    </div>
+
+    <!-- Mode Toggle -->
+    <div class="mode-toggle">
+      <button class="mode-btn active" id="modeBasic">Basic</button>
+      <button class="mode-btn" id="modeAdvanced">Advanced</button>
+    </div>
+
+    <!-- Keypad -->
+    <div class="keypad" id="keypadBasic">
+      <button class="btn function" data-action="clear">AC</button>
+      <button class="btn function" data-action="sign">+/-</button>
+      <button class="btn function" data-action="percent">%</button>
+      <button class="btn operator" data-value="÷">÷</button>
+
+      <button class="btn" data-value="7">7</button>
+      <button class="btn" data-value="8">8</button>
+      <button class="btn" data-value="9">9</button>
+      <button class="btn operator" data-value="×">×</button>
+
+      <button class="btn" data-value="4">4</button>
+      <button class="btn" data-value="5">5</button>
+      <button class="btn" data-value="6">6</button>
+      <button class="btn operator" data-value="-">-</button>
+
+      <button class="btn" data-value="1">1</button>
+      <button class="btn" data-value="2">2</button>
+      <button class="btn" data-value="3">3</button>
+      <button class="btn operator" data-value="+">+</button>
+
+      <button class="btn zero-btn" data-value="0">0</button>
+      <button class="btn" data-value=".">.</button>
+      <button class="btn function" data-action="delete">⌫</button>
+      <button class="btn equal" data-action="equals">=</button>
+    </div>
+
+    <!-- Advanced Keypad -->
+    <div class="keypad advanced-keypad" id="keypadAdvanced" style="display:none;">
+      <button class="btn function" data-action="clear">AC</button>
+      <button class="btn function" data-action="sqrt" title="Square Root">√</button>
+      <button class="btn function" data-action="square" title="Square">x²</button>
+      <button class="btn operator" data-value="÷">÷</button>
+
+      <button class="btn" data-value="7">7</button>
+      <button class="btn" data-value="8">8</button>
+      <button class="btn" data-value="9">9</button>
+      <button class="btn operator" data-value="×">×</button>
+
+      <button class="btn" data-value="4">4</button>
+      <button class="btn" data-value="5">5</button>
+      <button class="btn" data-value="6">6</button>
+      <button class="btn operator" data-value="-">-</button>
+
+      <button class="btn" data-value="1">1</button>
+      <button class="btn" data-value="2">2</button>
+      <button class="btn" data-value="3">3</button>
+      <button class="btn operator" data-value="+">+</button>
+
+      <button class="btn function" data-action="power" title="Power (x^y)">x^y</button>
+      <button class="btn" data-value="0">0</button>
+      <button class="btn function" data-action="mod" title="Modulo">mod</button>
+      <button class="btn equal" data-action="equals">=</button>
+
+      <button class="btn function" data-action="factorial" title="Factorial">n!</button>
+      <button class="btn" data-value=".">.</button>
+      <button class="btn function" data-action="delete">⌫</button>
+      <button class="btn function" data-action="percent">%</button>
+    </div>
+
+    <!-- Bottom Navigation -->
+    <nav>
+      <button class="nav-btn active" id="calcNav"><span>▣</span>Calculator</button>
+      <button class="nav-btn" id="memoryNav"><span>💾</span>Saved</button>
+      <button class="nav-btn" id="historyNav"><span>🕑</span>History</button>
+      <button class="nav-btn" id="converterNav"><span>💱</span>Convert</button>
+    </nav>
+
+  </div>
+
+  <!-- Side Panel for History and Saved Memory -->
+  <div class="panel" id="sidePanel">
+    <div class="panel-header">
+      <div class="panel-tabs">
+        <button class="panel-tab-btn active" id="tabHistory">History</button>
+        <button class="panel-tab-btn" id="tabMemory">Saved Memory</button>
+      </div>
+      <button id="closePanel" aria-label="Close">✕</button>
+    </div>
+    <div class="panel-list" id="panelList"></div>
+    <div class="panel-footer" id="panelFooter">
+      <button class="clear-btn" id="clearBtn">Clear</button>
+    </div>
+  </div>
+
+  <!-- Save / Name Memory Modal -->
+  <div class="modal-overlay" id="saveModalOverlay">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 id="modalTitle">Save to Memory</h3>
+        <button class="modal-close-btn" id="modalCloseBtn">✕</button>
+      </div>
+      <div class="modal-val" id="modalValDisplay">0</div>
+      <div class="modal-field">
+        <label for="modalNameInput">Memory Name</label>
+        <input type="text" id="modalNameInput" class="modal-input" placeholder="e.g. Rent, Groceries, Project Budget..." maxlength="35" autocomplete="off" />
+      </div>
+      <div class="modal-field">
+        <label>Mood Tag</label>
+        <div class="mood-selector" id="modalMoodSelector"></div>
+      </div>
+      <div class="modal-actions">
+        <button class="modal-btn cancel" id="modalCancelBtn">Cancel</button>
+        <button class="modal-btn confirm" id="modalSaveBtn">Save Memory</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Download / Install App Modal -->
+  <div class="modal-overlay" id="installModalOverlay">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3>Download CalcPro</h3>
+        <button class="modal-close-btn" id="installCloseBtn">✕</button>
+      </div>
+      <div class="install-preview">
+        <img src="/icons/icon-192.png" alt="CalcPro Icon" class="install-preview-icon" width="60" height="60" />
+        <div>
+          <h4 style="font-size:16px;font-weight:600;margin-bottom:4px;">CalcPro App</h4>
+          <p style="font-size:12px;color:var(--muted);line-height:1.4;">Install to your home screen or desktop for fast, offline calculations.</p>
+        </div>
+      </div>
+      <div class="install-guide" id="installGuideContent">
+        <!-- Filled dynamically -->
+      </div>
+      <div class="modal-actions">
+        <button class="modal-btn cancel" id="installDismissBtn">Close</button>
+        <button class="modal-btn confirm" id="installActionBtn">📲 Install App</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="offline-indicator" id="offlineIndicator">
+    <span>⚡</span> Offline Mode — Ready to Calculate
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <!-- Token/Rewards Modal -->
+  <div class="modal-overlay" id="tokenModalOverlay">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3>🪙 Token Rewards</h3>
+        <button class="modal-close-btn" id="tokenCloseBtn">✕</button>
+      </div>
+      <div class="token-balance">
+        <div class="token-balance-label">Your Balance</div>
+        <div class="token-balance-amount" id="tokenBalanceDisplay">0 Tokens</div>
+      </div>
+      <div class="token-info">
+        <p>Unlock premium mood tags by earning tokens! Watch a short ad to earn <strong>10 tokens</strong>.</p>
+      </div>
+      <div class="premium-moods-preview">
+        <h4>Premium Mood Tags (10 tokens each)</h4>
+        <div class="premium-mood-list" id="premiumMoodList"></div>
+      </div>
+      <div class="modal-actions">
+        <button class="modal-btn cancel" id="tokenDismissBtn">Close</button>
+        <button class="modal-btn confirm ad-btn" id="watchAdBtn">
+          <span>📺</span> Watch Ad (+10 🪙)
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Ad Watching Simulation Modal -->
+  <div class="modal-overlay" id="adModalOverlay">
+    <div class="modal-card ad-modal">
+      <div class="ad-header">
+        <span class="ad-label">Advertisement</span>
+        <span class="ad-timer" id="adTimer">5s</span>
+      </div>
+      <div class="ad-content">
+        <div class="ad-animation">
+          <div class="ad-icon">🎯</div>
+          <h3>Thank you for supporting CalcPro!</h3>
+          <p>Please wait <span id="adCountdown">5</span> seconds...</p>
+        </div>
+      </div>
+      <button class="modal-btn confirm ad-close-btn" id="adCloseBtn" disabled>
+        <span id="adBtnText">Please wait...</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Currency Converter Panel -->
+  <div class="panel converter-panel" id="converterPanel">
+    <div class="panel-header">
+      <h3>💱 Currency Converter</h3>
+      <button id="closeConverterPanel" aria-label="Close">✕</button>
+    </div>
+    <div class="converter-content">
+      <div class="converter-input-group">
+        <label>Amount</label>
+        <input type="number" id="convertAmount" class="converter-input" placeholder="Enter amount" value="0">
+      </div>
+      <div class="converter-select-group">
+        <div class="converter-field">
+          <label>From</label>
+          <select id="currencyFrom" class="converter-select">
+            <option value="USD">USD - US Dollar</option>
+            <option value="EUR">EUR - Euro</option>
+            <option value="GBP">GBP - British Pound</option>
+            <option value="JPY">JPY - Japanese Yen</option>
+            <option value="CNY">CNY - Chinese Yuan</option>
+            <option value="INR">INR - Indian Rupee</option>
+            <option value="CAD">CAD - Canadian Dollar</option>
+            <option value="AUD">AUD - Australian Dollar</option>
+          </select>
+        </div>
+        <button class="swap-btn" id="swapCurrencies" title="Swap currencies">⇄</button>
+        <div class="converter-field">
+          <label>To</label>
+          <select id="currencyTo" class="converter-select">
+            <option value="EUR">EUR - Euro</option>
+            <option value="USD">USD - US Dollar</option>
+            <option value="GBP">GBP - British Pound</option>
+            <option value="JPY">JPY - Japanese Yen</option>
+            <option value="CNY">CNY - Chinese Yuan</option>
+            <option value="INR">INR - Indian Rupee</option>
+            <option value="CAD">CAD - Canadian Dollar</option>
+            <option value="AUD">AUD - Australian Dollar</option>
+          </select>
+        </div>
+      </div>
+      <button class="convert-btn" id="convertBtn">Convert</button>
+      <div class="conversion-result" id="conversionResult"></div>
+      <div class="conversion-note">
+        <small>💡 Rates are approximate and for educational purposes</small>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/script.js"></script>
+</body>
+</html>
