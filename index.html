@@ -7,6 +7,18 @@
   <meta name="description" content="Modern dark calculator with memory and calculation history.">
   <meta property="og:title" content="CalcPro">
   <meta property="og:description" content="Modern dark calculator with memory and calculation history.">
+  
+  <!-- PWA & Mobile Capabilities -->
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#7c3aed">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="CalcPro">
+  <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
+  <link rel="icon" type="image/svg+xml" href="/icons/icon.svg">
+  <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
+
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
@@ -15,7 +27,7 @@
 
     <!-- Header -->
     <header>
-      <button class="icon-btn" id="themeButton">☀</button>
+      <button class="icon-btn" id="themeButton" title="Toggle theme">☀</button>
 
       <div class="brand">
         <div class="logo">▣</div>
@@ -24,7 +36,8 @@
         </div>
       </div>
 
-      <button class="icon-btn" id="historyButton">🕑</button>
+      <button class="icon-btn install-btn" id="installButton" title="Download & Install App">📲</button>
+      <button class="icon-btn" id="historyButton" title="History">🕑</button>
     </header>
 
     <!-- Display -->
@@ -35,15 +48,17 @@
 
     <!-- Memory Bar -->
     <div class="memory-bar">
-      <div class="memory-info" id="memoryBox">
+      <div class="memory-info" id="memoryBox" title="Click to view saved memories">
         <span>M</span>
         <b id="memoryName">Memory</b>:
         <b id="memoryValue">0</b>
+        <span class="saved-mode-pill" id="savedModePill">SAVED</span>
       </div>
-      <button class="mem-btn" data-action="MC">MC</button>
-      <button class="mem-btn" data-action="MR">MR</button>
-      <button class="mem-btn" data-action="M+">M+</button>
-      <button class="mem-btn" data-action="M-">M-</button>
+      <button class="mem-btn" data-action="MC" title="Memory Clear">MC</button>
+      <button class="mem-btn" data-action="MR" title="Memory Recall">MR</button>
+      <button class="mem-btn" data-action="M+" title="Memory Add">M+</button>
+      <button class="mem-btn" data-action="M-" title="Memory Subtract">M-</button>
+      <button class="mem-btn save-btn" data-action="MS" title="Memory Save">MS</button>
     </div>
 
     <!-- Keypad -->
@@ -76,21 +91,80 @@
 
     <!-- Bottom Navigation -->
     <nav>
-      <button class="nav-btn active"><span>▣</span>Calculator</button>
+      <button class="nav-btn active" id="calcNav"><span>▣</span>Calculator</button>
+      <button class="nav-btn" id="memoryNav"><span>💾</span>Saved</button>
       <button class="nav-btn" id="historyNav"><span>🕑</span>History</button>
     </nav>
 
   </div>
 
-  <!-- Side Panel for History and Notes -->
+  <!-- Side Panel for History and Saved Memory -->
   <div class="panel" id="sidePanel">
     <div class="panel-header">
-      <h2 id="panelTitle">History</h2>
-      <button id="closePanel">✕</button>
+      <div class="panel-tabs">
+        <button class="panel-tab-btn active" id="tabHistory">History</button>
+        <button class="panel-tab-btn" id="tabMemory">Saved Memory</button>
+      </div>
+      <button id="closePanel" aria-label="Close">✕</button>
     </div>
     <div class="panel-list" id="panelList"></div>
-    <button class="clear-btn" id="clearBtn">Clear</button>
+    <div class="panel-footer" id="panelFooter">
+      <button class="clear-btn" id="clearBtn">Clear</button>
+    </div>
   </div>
+
+  <!-- Save / Name Memory Modal -->
+  <div class="modal-overlay" id="saveModalOverlay">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 id="modalTitle">Save to Memory</h3>
+        <button class="modal-close-btn" id="modalCloseBtn">✕</button>
+      </div>
+      <div class="modal-val" id="modalValDisplay">0</div>
+      <div class="modal-field">
+        <label for="modalNameInput">Memory Name</label>
+        <input type="text" id="modalNameInput" class="modal-input" placeholder="e.g. Rent, Groceries, Project Budget..." maxlength="35" autocomplete="off" />
+      </div>
+      <div class="modal-field">
+        <label>Mood Tag</label>
+        <div class="mood-selector" id="modalMoodSelector"></div>
+      </div>
+      <div class="modal-actions">
+        <button class="modal-btn cancel" id="modalCancelBtn">Cancel</button>
+        <button class="modal-btn confirm" id="modalSaveBtn">Save Memory</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Download / Install App Modal -->
+  <div class="modal-overlay" id="installModalOverlay">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3>Download CalcPro</h3>
+        <button class="modal-close-btn" id="installCloseBtn">✕</button>
+      </div>
+      <div class="install-preview">
+        <img src="/icons/icon-192.png" alt="CalcPro Icon" class="install-preview-icon" width="60" height="60" />
+        <div>
+          <h4 style="font-size:16px;font-weight:600;margin-bottom:4px;">CalcPro App</h4>
+          <p style="font-size:12px;color:var(--muted);line-height:1.4;">Install to your home screen or desktop for fast, offline calculations.</p>
+        </div>
+      </div>
+      <div class="install-guide" id="installGuideContent">
+        <!-- Filled dynamically -->
+      </div>
+      <div class="modal-actions">
+        <button class="modal-btn cancel" id="installDismissBtn">Close</button>
+        <button class="modal-btn confirm" id="installActionBtn">📲 Install App</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="offline-indicator" id="offlineIndicator">
+    <span>⚡</span> Offline Mode — Ready to Calculate
+  </div>
+
+  <div class="toast" id="toast"></div>
 
   <script src="js/script.js"></script>
 </body>
