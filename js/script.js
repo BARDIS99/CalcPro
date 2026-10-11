@@ -827,24 +827,27 @@ const renderSavedMemories = () => {
 
   panelList.querySelectorAll('.recall-btn').forEach(btn => {
     btn.onclick = (e) => {
+      e.preventDefault();
       e.stopPropagation();
+      
       const id = btn.getAttribute('data-id');
       const item = savedMemories.find(m => m.id === id);
       const recalledValue = btn.getAttribute('data-val');
       
       if (item) {
-        // Set as current calculator value
-        current = recalledValue;
+        // Just set as current calculator value (NOT adding to memory)
+        current = String(recalledValue);
         expression = '';
-        lastAction = 'equals';
+        lastAction = null;
         
-        // Also update active memory
-        activeMemoryName = item.name || item.mood?.label || 'Memory';
-        memory = Number(recalledValue);
-        persistMemories();
+        // Update display
         updateDisplay();
         
-        showToast(`Recalled: ${activeMemoryName} = ${formatNumber(recalledValue)}`, '📥');
+        // Show notification
+        const displayName = item.name || `${item.mood?.emoji || '✨'} ${item.mood?.label || 'Saved'}`;
+        showToast(`Recalled: ${displayName} = ${formatNumber(recalledValue)}`, '📥');
+        
+        // Close panel
         closePanel();
       }
     };
@@ -852,7 +855,9 @@ const renderSavedMemories = () => {
 
   panelList.querySelectorAll('.add-btn').forEach(btn => {
     btn.onclick = (e) => {
+      e.preventDefault();
       e.stopPropagation();
+      
       const valToAdd = btn.getAttribute('data-val');
       
       // If there's an existing expression, complete it first
@@ -860,12 +865,14 @@ const renderSavedMemories = () => {
         calculateEnhanced();
       }
       
-      // Now add the saved value
+      // Now add the saved value to current
+      const previousValue = current;
       expression = current + ' + ';
       current = valToAdd;
       lastAction = 'operator';
+      
       updateDisplay();
-      showToast(`Added +${formatNumber(valToAdd)} to ${formatNumber(expression.replace(' + ', ''))}`, '➕');
+      showToast(`Adding ${formatNumber(valToAdd)} to ${formatNumber(previousValue)}`, '➕');
       closePanel();
     };
   });
