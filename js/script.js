@@ -830,17 +830,23 @@ const renderSavedMemories = () => {
       e.stopPropagation();
       const id = btn.getAttribute('data-id');
       const item = savedMemories.find(m => m.id === id);
-      current = btn.getAttribute('data-val');
+      const recalledValue = btn.getAttribute('data-val');
+      
       if (item) {
+        // Set as current calculator value
+        current = recalledValue;
+        expression = '';
+        lastAction = 'equals';
+        
+        // Also update active memory
         activeMemoryName = item.name || item.mood?.label || 'Memory';
-        memory = Number(item.value);
+        memory = Number(recalledValue);
         persistMemories();
+        updateDisplay();
+        
+        showToast(`Recalled: ${activeMemoryName} = ${formatNumber(recalledValue)}`, '📥');
+        closePanel();
       }
-      expression = '';
-      lastAction = 'equals';
-      updateDisplay();
-      showToast(`Recalled "${activeMemoryName}" (${formatNumber(current)})`, '📥');
-      closePanel();
     };
   });
 
@@ -848,11 +854,18 @@ const renderSavedMemories = () => {
     btn.onclick = (e) => {
       e.stopPropagation();
       const valToAdd = btn.getAttribute('data-val');
-      expression = (expression && lastAction !== 'equals') ? expression + current + ' + ' : current + ' + ';
+      
+      // If there's an existing expression, complete it first
+      if (expression && current !== '0') {
+        calculateEnhanced();
+      }
+      
+      // Now add the saved value
+      expression = current + ' + ';
       current = valToAdd;
       lastAction = 'operator';
       updateDisplay();
-      showToast(`Appended +${formatNumber(valToAdd)}`, '➕');
+      showToast(`Added +${formatNumber(valToAdd)} to ${formatNumber(expression.replace(' + ', ''))}`, '➕');
       closePanel();
     };
   });
